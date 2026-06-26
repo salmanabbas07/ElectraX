@@ -1,0 +1,129 @@
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  margin-top: 28px;
+  align-items: start;
+}
+
+.cart-items {
+  display: grid;
+  gap: 16px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+.cart-item img {
+  width: 120px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.cart-item h3 {
+  margin: 0 0 7px;
+}
+
+.cart-item p {
+  margin: 0 0 12px;
+  color: var(--cyan);
+  font-weight: 800;
+}
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-row button,
+.remove-btn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.remove-btn {
+  color: var(--danger);
+}
+
+.summary,
+.empty-cart {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+.summary h2,
+.empty-cart h2 {
+  margin: 0 0 18px;
+}
+
+.summary p {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+  color: var(--muted);
+}
+
+.summary .total {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  font-size: 1.15rem;
+}
+
+.summary .primary-btn {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.empty-cart {
+  margin-top: 28px;
+}
+
+@media (max-width: 860px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .cart-item {
+    grid-template-columns: 88px 1fr;
+  }
+
+  .cart-item img {
+    width: 88px;
+    height: 88px;
+  }
+
+  .remove-btn {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

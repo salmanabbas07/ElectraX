@@ -1,0 +1,60 @@
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.skeleton-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.skeleton-card span,
+.skeleton-card p,
+.skeleton-card button {
+  display: block;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.1),
+    rgba(148, 163, 184, 0.24),
+    rgba(148, 163, 184, 0.1)
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.3s infinite;
+}
+
+.skeleton-card span {
+  height: 180px;
+}
+
+.skeleton-card p {
+  height: 18px;
+  margin: 16px 0 0;
+}
+
+.skeleton-card button {
+  height: 42px;
+  margin-top: 16px;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+}

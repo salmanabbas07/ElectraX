@@ -1,0 +1,47 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+
+# =========================
+# Environment Files
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+frontend/.env
+backend/.env
+
+# =========================
+# Build Output
+# =========================
+dist/
+build/
+coverage/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Cache
+# =========================
+.cache/
+.vite/
+
+# =========================
+# IDE & Editor
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Operating System Files
+# =========================
+.DS_Store
+Thumbs.db

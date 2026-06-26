@@ -1,0 +1,20 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="28" fill="#0f172a"/>
+  <rect x="8" y="8" width="112" height="112" rx="24" stroke="#06b6d4" stroke-opacity="0.45" stroke-width="3"/>
+  <path d="M73 14L34 72H58L50 114L95 51H68L73 14Z" fill="url(#boltGradient)"/>
+  <path d="M73 14L34 72H58L50 114L95 51H68L73 14Z" filter="url(#glow)" stroke="#f8fafc" stroke-opacity="0.25" stroke-width="2"/>
+  <defs>
+    <linearGradient id="boltGradient" x1="34" y1="14" x2="98" y2="110" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06b6d4"/>
+      <stop offset="0.55" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <filter id="glow" x="15" y="-5" width="99" height="138" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

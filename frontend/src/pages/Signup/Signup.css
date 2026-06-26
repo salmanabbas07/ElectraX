@@ -1,0 +1,19 @@
+@import "../Login/Login.css";
+
+.signup-page .auth-card {
+  width: min(100%, 760px);
+  padding: 24px;
+  border-color: rgba(37, 99, 235, 0.34);
+}
+
+.signup-page {
+  padding-top: 96px;
+}
+
+.signup-page .auth-card h1 {
+  margin: 8px 0 6px;
+}
+
+.signup-page .auth-card label {
+  margin-top: 12px;
+}

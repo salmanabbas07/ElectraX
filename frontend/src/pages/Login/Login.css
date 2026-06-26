@@ -1,0 +1,123 @@
+.auth-page {
+  min-height: 86vh;
+  display: grid;
+  place-items: center;
+  padding: 110px 16px 60px;
+}
+
+.auth-card {
+  width: min(100%, 430px);
+  padding: 28px;
+  border: 1px solid rgba(6, 182, 212, 0.28);
+  border-radius: 8px;
+  background: rgba(17, 24, 39, 0.74);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+body.light-theme .auth-card {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.auth-logo {
+  color: var(--cyan);
+  font-weight: 900;
+}
+
+.auth-card h1 {
+  margin: 12px 0 8px;
+  font-size: 2rem;
+}
+
+.auth-card p,
+.auth-card small {
+  color: var(--muted);
+}
+
+.auth-card label {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+  font-weight: 700;
+}
+
+.auth-card input {
+  min-height: 42px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--card-soft);
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+
+.auth-message {
+  margin-top: 14px;
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.auth-card .primary-btn {
+  width: 100%;
+  margin-top: 18px;
+  border: 0;
+}
+
+.social-login {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.social-login button {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.auth-card small a {
+  color: var(--cyan);
+  font-weight: 800;
+}
+
+.reset-btn {
+  width: fit-content;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  color: var(--cyan);
+  background: transparent;
+  font-weight: 800;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.address-title {
+  margin-top: 14px;
+  color: var(--cyan);
+  font-weight: 900;
+}
+
+@media (max-width: 560px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
