@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { FiClock, FiDollarSign, FiTag, FiTrendingUp } from "react-icons/fi";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { FiClock, FiDollarSign, FiSearch, FiTag, FiTrendingUp } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import SidebarFilter from "../../components/SidebarFilter/SidebarFilter.jsx";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
@@ -19,6 +19,7 @@ function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchParams] = useSearchParams();
   const productsTopRef = useRef(null);
   const productsPerPage = 12;
@@ -32,12 +33,27 @@ function Products() {
   });
 
   const activeCategory = filterUi.category;
-  const categoryProducts = activeCategory === "All" ? products : products.filter((product) => product.category === activeCategory);
-  const brands = [...new Set(categoryProducts.map((product) => product.brand))];
-  const filteredProducts = categoryProducts
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const categoryProducts = useMemo(
+    () => (activeCategory === "All" ? products : products.filter((product) => product.category === activeCategory)),
+    [activeCategory, products],
+  );
+  const brands = useMemo(
+    () => [...new Set(categoryProducts.map((product) => product.brand))].sort((a, b) => a.localeCompare(b)),
+    [categoryProducts],
+  );
+  const filteredProducts = useMemo(() => categoryProducts
     .filter((product) => filterUi.brand === "All" || product.brand === filterUi.brand)
     .filter((product) => product.price <= filterUi.price)
     .filter((product) => product.rating >= filterUi.rating)
+    .filter((product) => {
+      if (!normalizedSearch) return true;
+
+      return [product.title, product.brand, product.category, ...(product.specs || [])]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedSearch);
+    })
     .sort((a, b) => {
       if (activeSort === "Newest First") {
         const latestA = a.createdAt ? new Date(a.createdAt).getTime() : Number(a.id) || 0;
@@ -47,7 +63,7 @@ function Products() {
       if (activeSort === "Discount First") return parseInt(b.discount || 0) - parseInt(a.discount || 0);
       if (activeSort === "Cheapest") return a.price - b.price;
       return b.rating - a.rating;
-    });
+    }), [activeSort, categoryProducts, filterUi.brand, filterUi.price, filterUi.rating, normalizedSearch]);
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / productsPerPage));
   const startIndex = (currentPage - 1) * productsPerPage;
   const showingStart = filteredProducts.length === 0 ? 0 : startIndex + 1;
@@ -67,7 +83,7 @@ function Products() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filterUi.brand, filterUi.price, filterUi.rating, activeSort]);
+  }, [filterUi.brand, filterUi.price, filterUi.rating, activeSort, searchTerm]);
 
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -95,6 +111,16 @@ function Products() {
             {error && <p className="section-text">{error}</p>}
 
             <div className="sort-panel">
+              <label className="product-search">
+                <FiSearch />
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search products, brands, specs"
+                />
+              </label>
+
               <span>Showing {showingStart}-{Math.min(startIndex + productsPerPage, filteredProducts.length)} of {filteredProducts.length}</span>
 
               <div className="sort-options">
@@ -116,15 +142,24 @@ function Products() {
               )}
             </div>
 
-            <div className="pagination">
-              <button className="page-btn" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Previous</button>
+            {!error && filteredProducts.length === 0 && (
+              <div className="empty-products">
+                <h2>No products found</h2>
+                <p>Try a different search, category, brand, price, or rating filter.</p>
+              </div>
+            )}
 
-              {pageNumbers.map((pageNumber) => (
-                <button key={pageNumber} className={currentPage === pageNumber ? "page-btn active" : "page-btn"} onClick={() => goToPage(pageNumber)}>{pageNumber}</button>
-              ))}
+            {filteredProducts.length > 0 && (
+              <div className="pagination">
+                <button className="page-btn" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Previous</button>
 
-              <button className="page-btn" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Next</button>
-            </div>
+                {pageNumbers.map((pageNumber) => (
+                  <button key={pageNumber} className={currentPage === pageNumber ? "page-btn active" : "page-btn"} onClick={() => goToPage(pageNumber)}>{pageNumber}</button>
+                ))}
+
+                <button className="page-btn" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Next</button>
+              </div>
+            )}
           </div>
         </div>
       </div>

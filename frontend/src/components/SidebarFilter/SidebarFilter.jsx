@@ -4,6 +4,11 @@ import "./SidebarFilter.css";
 
 function SidebarFilter({ filters, setFilters, brands }) {
   const changeFilter = (name, value) => {
+    if (name === "category") {
+      setFilters({ ...filters, category: value, brand: "All" });
+      return;
+    }
+
     setFilters({ ...filters, [name]: value });
   };
 

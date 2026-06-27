@@ -13,7 +13,9 @@ if (!process.env.MONGO_URI) {
   throw new Error("MONGO_URI is missing. Add it in backend/.env");
 }
 
-app.use(cors({ origin: "http://localhost:5173" }));
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 app.get("/", (req, res) => {

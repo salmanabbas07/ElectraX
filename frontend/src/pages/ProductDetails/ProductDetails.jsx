@@ -13,11 +13,19 @@ function ProductDetails() {
   const [error, setError] = useState("");
   const { addToCart } = useCart();
 
+  const handleActiveImageError = () => {
+    const nextImage = (product?.gallery || []).find((image) => image !== activeImage);
+
+    if (nextImage) {
+      setActiveImage(nextImage);
+    }
+  };
+
   useEffect(() => {
     fetchProductById(id)
       .then((data) => {
         setProduct(data);
-        setActiveImage(data.gallery?.[0] || data.image);
+        setActiveImage(data.image);
       })
       .catch(() => setError("Product nahi mila. Backend server ya product id check karo."));
   }, [id]);
@@ -48,10 +56,10 @@ function ProductDetails() {
       <div className="container details-grid">
         <div className="gallery">
           <div className="main-image">
-            <img src={activeImage} alt={product.title} />
+            <img src={activeImage} alt={product.title} loading="eager" decoding="async" onError={handleActiveImageError} />
           </div>
           <div className="thumbs">
-            {(product.gallery || [product.image]).map((image) => (
+            {[product.image, ...(product.gallery || [])].map((image) => (
               <button key={image} className={activeImage === image ? "active" : ""} onClick={() => setActiveImage(image)}>
                 <img src={image} alt={product.title} />
               </button>

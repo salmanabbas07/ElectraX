@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "seed": "node scripts/seedProducts.js"
+    "seed": "node scripts/seedProducts.js",
+    "update-images": "node scripts/seedProducts.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

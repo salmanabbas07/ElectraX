@@ -1,6 +1,9 @@
 .product-card {
   position: relative;
   overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--card);
@@ -23,15 +26,17 @@
 .product-img {
   position: relative;
   display: block;
-  height: 260px;
+  height: 250px;
   overflow: hidden;
-  background: var(--card-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.9));
 }
 
 .product-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 18px;
   transition: transform 0.55s var(--smooth), filter 0.35s ease;
 }
 
@@ -73,6 +78,9 @@
 }
 
 .product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
 }
 
@@ -102,6 +110,7 @@
 
 .price-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   margin-top: 12px;
@@ -123,7 +132,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: auto;
   border: 0;
   border-radius: 8px;
   color: #fff;

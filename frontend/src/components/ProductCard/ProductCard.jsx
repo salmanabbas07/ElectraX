@@ -8,11 +8,18 @@ import "./ProductCard.css";
 function ProductCard({ product }) {
   const { addToCart } = useCart();
   const productId = getProductId(product);
+  const fallbackImage = (product.gallery || []).find((image) => image !== product.image);
+
+  const handleImageError = (event) => {
+    if (fallbackImage && event.currentTarget.src !== fallbackImage) {
+      event.currentTarget.src = fallbackImage;
+    }
+  };
 
   return (
     <article className="product-card">
       <Link to={`/products/${productId}`} className="product-img">
-        <img src={product.image} alt={product.title} />
+        <img src={product.image} alt={product.title} loading="lazy" decoding="async" onError={handleImageError} />
         <span className="discount">{product.discount}</span>
       </Link>
 
