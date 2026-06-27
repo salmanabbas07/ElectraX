@@ -45,3 +45,9 @@ logs/
 # =========================
 .DS_Store
 Thumbs.db
+
+# =========================
+# check images System Files
+# =========================
+
+check-images.js
