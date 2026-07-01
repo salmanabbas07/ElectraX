@@ -1,4 +1,4 @@
-import { FiArrowRight, FiCpu, FiHeadphones, FiSmartphone,} from "react-icons/fi";
+import { FiArrowRight, FiCpu, FiHeadphones, FiSmartphone, FiMonitor} from "react-icons/fi";
 import { Link } from "react-router-dom";
 import "./Hero.css";
 
@@ -22,9 +22,12 @@ function Hero() {
 
           <div className="float-item phone"> <FiSmartphone /> Mobiles </div>
 
-          <div className="float-item audio"> <FiHeadphones /> Audio </div>
+          <div className="float-item audio"> <FiHeadphones /> Headphones </div>
 
-          <div className="float-item chip"> <FiCpu /> AI Ready </div>
+          {/* <div className="float-item chip"> <FiCpu /> AI Ready </div> */}
+
+          <div className="float-item chip"> <FiMonitor /> Moniter </div>
+
 
         </div>
       </div>

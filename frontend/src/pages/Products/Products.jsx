@@ -7,7 +7,7 @@ import { fetchProducts } from "../../services/api.js";
 import { getProductId } from "../../utils/productId.js";
 import "./Products.css";
 
-function Products() {
+function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm }) {
   const sortOptions = [
     { name: "Popular First", icon: <FiTrendingUp /> },
     { name: "Newest First", icon: <FiClock /> },
@@ -19,7 +19,7 @@ function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(propSearchTerm || "");
   const [searchParams] = useSearchParams();
   const productsTopRef = useRef(null);
   const productsPerPage = 12;
@@ -77,6 +77,19 @@ function Products() {
   }, []);
 
   useEffect(() => {
+    if (propSearchTerm !== undefined) {
+      setSearchTerm(propSearchTerm);
+    }
+  }, [propSearchTerm]);
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+    if (propSetSearchTerm) {
+      propSetSearchTerm(value);
+    }
+  };
+
+  useEffect(() => {
     setCurrentPage(1);
     setFilterUi((currentFilters) => ({ ...currentFilters, category: selectedCategory }));
   }, [selectedCategory]);
@@ -116,7 +129,7 @@ function Products() {
                 <input
                   type="search"
                   value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
+                  onChange={(event) => handleSearchChange(event.target.value)}
                   placeholder="Search products, brands, specs"
                 />
               </label>

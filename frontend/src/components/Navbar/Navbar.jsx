@@ -5,7 +5,7 @@ import { useCart } from "../../context/CartContext.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import "./Navbar.css";
 
-function Navbar({ theme, toggleTheme }) {
+function Navbar({ theme, toggleTheme, searchTerm, onSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { cartCount } = useCart();
   const { user, logout } = useAuth();
@@ -17,6 +17,10 @@ function Navbar({ theme, toggleTheme }) {
     closeMenu();
   };
 
+  const handleSearchChange = (e) => {
+    onSearch(e.target.value);
+  };
+
   return (
     <header className="navbar">
       <div className="nav-inner">
@@ -24,7 +28,7 @@ function Navbar({ theme, toggleTheme }) {
 
         <div className="search-box">
           <FiSearch />
-          <input type="text" placeholder="Search gadgets, brands..." />
+          <input type="text" placeholder="Search gadgets, brands..." value={searchTerm} onChange={handleSearchChange} />
         </div>
 
         <nav className={menuOpen ? "nav-links open" : "nav-links"}>
@@ -58,7 +62,7 @@ function Navbar({ theme, toggleTheme }) {
           </Link>
 
           <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"> {menuOpen ? <FiX /> : <FiMenu />} </button>
-          
+
         </div>
       </div>
     </header>

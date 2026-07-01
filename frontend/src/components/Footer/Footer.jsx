@@ -1,4 +1,5 @@
-import { FiFacebook, FiGithub, FiInstagram, FiSend, FiTwitter,} from "react-icons/fi";
+import {FiGithub, FiSend, FiGlobe, FiLinkedin} from "react-icons/fi";
+
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
@@ -11,10 +12,10 @@ function Footer() {
           <Link to="/" className="footer-logo"> ElectraX</Link>
           <p>Premium electronics, clean design, fast delivery and future-ready devices.</p>
           <div className="socials">
-            <a href="https://facebook.com" aria-label="Facebook"> <FiFacebook /> </a>
-            <a href="https://instagram.com" aria-label="Instagram"> <FiInstagram /> </a>
-            <a href="https://twitter.com" aria-label="Twitter"> <FiTwitter /> </a>
-            <a href="https://github.com" aria-label="Github"> <FiGithub /> </a>
+            {/* <a href="https://facebook.com" aria-label="Facebook"> <FiFacebook /> </a> */}
+            <a href="#" aria-label="Instagram"> <FiGlobe /> </a>
+            <a href="https://www.linkedin.com/in/salman-abbas-3090413a8/" aria-label="Twitter"> <FiLinkedin /></a>
+            <a href="https://github.com/salmanabbas07" aria-label="Github"> <FiGithub /> </a>
           </div>
         </div>
 
