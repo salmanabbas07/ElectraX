@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { FiMenu, FiMoon, FiSearch, FiShoppingCart, FiSun, FiX, } from "react-icons/fi";
+import { FiMenu, FiMoon, FiSearch, FiShoppingCart, FiSun, FiX, FiUser, FiLogOut } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./Navbar.css";
 
 function Navbar({ theme, toggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { cartCount } = useCart();
+  const { user, logout } = useAuth();
 
   const closeMenu = () => setMenuOpen(false);
+
+  const handleLogout = async () => {
+    await logout();
+    closeMenu();
+  };
 
   return (
     <header className="navbar">
@@ -23,7 +30,22 @@ function Navbar({ theme, toggleTheme }) {
         <nav className={menuOpen ? "nav-links open" : "nav-links"}>
           <NavLink to="/" onClick={closeMenu}> Home </NavLink>
           <NavLink to="/products" onClick={closeMenu}> Products </NavLink>
-          <NavLink to="/login" onClick={closeMenu}> Login </NavLink>
+          {user ? (
+            <>
+              <NavLink to="/my-account" onClick={closeMenu}> My Account </NavLink>
+              {user.role === "admin" && (
+                <NavLink to="/admin/dashboard" onClick={closeMenu}> Admin Dashboard </NavLink>
+              )}
+              <button className="nav-logout" onClick={handleLogout}>
+                <FiLogOut /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/login" onClick={closeMenu}> Login </NavLink>
+              <NavLink to="/signup" onClick={closeMenu}> Signup </NavLink>
+            </>
+          )}
         </nav>
 
         <div className="nav-actions">

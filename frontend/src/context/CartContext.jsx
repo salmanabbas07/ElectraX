@@ -1,11 +1,18 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { getProductId } from "../utils/productId.js";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem("electrax_cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [toast, setToast] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("electrax_cart", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const showToast = (message) => {
     setToast(message);
@@ -49,6 +56,10 @@ export function CartProvider({ children }) {
     showToast("Item removed from cart");
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -64,6 +75,7 @@ export function CartProvider({ children }) {
       addToCart,
       updateQuantity,
       removeFromCart,
+      clearCart,
     }),
     [cartItems, toast, cartCount, cartTotal],
   );

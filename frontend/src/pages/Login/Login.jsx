@@ -1,21 +1,29 @@
 import { useState } from "react";
 import { FiMail } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./Login.css";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-    if (!form.email.includes("@") || form.password.length < 6) {
-      setMessage("Enter a valid email and at least 6 characters for password.");
-      return;
+    try {
+      await login(form.email, form.password);
+      navigate("/");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setMessage("Demo login successful.");
   };
 
   const resetPassword = () => {
@@ -47,7 +55,9 @@ function Login() {
 
         {message && <div className="auth-message">{message}</div>}
 
-        <button className="primary-btn">Login</button>
+        <button className="primary-btn" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
         <div className="social-login">
           <button type="button"> <FiMail /> Google </button>

@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
+    "axios": "^1.18.1",
     "react": "latest",
     "react-dom": "latest",
+    "react-icons": "latest",
     "react-router-dom": "latest",
-    "react-icons": "latest"
-  },
-  "devDependencies": {}
+    "vite": "latest"
+  }
 }

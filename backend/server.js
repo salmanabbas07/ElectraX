@@ -1,8 +1,12 @@
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import productRoutes from "./routes/productRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -15,14 +19,18 @@ if (!process.env.MONGO_URI) {
 
 const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
-app.use(cors({ origin: allowedOrigins }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.json({ message: "ElectraX API is running" });
 });
 
 app.use("/api/products", productRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/users", userRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiMail } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./Signup.css";
 
 function Signup() {
@@ -17,16 +18,38 @@ function Signup() {
   });
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signup } = useAuth();
+  const navigate = useNavigate();
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    setMessage("");
 
     if (!form.name.trim() || !form.phone.trim() || !form.email.includes("@") || form.password.length < 6 || form.password !== form.confirmPassword || !form.street.trim() || !form.state.trim() || !form.city.trim() || !form.zipcode.trim()) {
       setMessage("Please fill all fields with valid details.");
+      setLoading(false);
       return;
     }
 
-    setMessage("Demo account created successfully.");
+    try {
+      await signup({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        password: form.password,
+        street: form.street,
+        state: form.state,
+        city: form.city,
+        zipcode: form.zipcode,
+      });
+      navigate("/");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,7 +108,9 @@ function Signup() {
 
         {message && <div className="auth-message">{message}</div>}
 
-        <button className="primary-btn">Signup</button>
+        <button className="primary-btn" disabled={loading}>
+          {loading ? "Creating account..." : "Signup"}
+        </button>
 
         <div className="social-login">
           <button type="button"> <FiMail /> Google </button>

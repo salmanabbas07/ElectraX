@@ -8,6 +8,11 @@ import ProductDetails from "./pages/ProductDetails/ProductDetails.jsx";
 import Cart from "./pages/Cart/Cart.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
+import MyAccount from "./pages/MyAccount/MyAccount.jsx";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard.jsx";
+import AddProduct from "./pages/AddProduct/AddProduct.jsx";
+import EditProduct from "./pages/EditProduct/EditProduct.jsx";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
 function App() {
   const [theme, setTheme] = useState("dark");
@@ -31,6 +36,38 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/my-account"
+            element={
+              <ProtectedRoute>
+                <MyAccount />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute requireAdmin>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/add-product"
+            element={
+              <ProtectedRoute requireAdmin>
+                <AddProduct />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/edit-product/:id"
+            element={
+              <ProtectedRoute requireAdmin>
+                <EditProduct />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
       <Footer />
