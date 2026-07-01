@@ -1,4 +1,4 @@
-import { FiArrowRight, FiCpu, FiHeadphones, FiSmartphone, FiMonitor} from "react-icons/fi";
+import { FiArrowRight, FiCpu, FiHeadphones, FiSmartphone, FiMonitor } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import "./Hero.css";
 

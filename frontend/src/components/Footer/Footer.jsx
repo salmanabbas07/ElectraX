@@ -1,4 +1,4 @@
-import {FiGithub, FiSend, FiGlobe, FiLinkedin} from "react-icons/fi";
+import { FiGithub, FiSend, FiGlobe, FiLinkedin } from "react-icons/fi";
 
 import { Link } from "react-router-dom";
 import "./Footer.css";
@@ -7,7 +7,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-grid">
-        
+
         <div>
           <Link to="/" className="footer-logo"> ElectraX</Link>
           <p>Premium electronics, clean design, fast delivery and future-ready devices.</p>
