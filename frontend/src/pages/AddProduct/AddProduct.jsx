@@ -20,6 +20,8 @@ function AddProduct() {
     gallery: "",
     rating: "",
     description: "",
+    specs: "",
+    reviews: "",
   });
 
   const handleSubmit = async (e) => {
@@ -27,6 +29,23 @@ function AddProduct() {
     setLoading(true);
 
     try {
+      const parsedSpecs = form.specs
+        ? form.specs.split("\n").map(s => s.trim()).filter(Boolean)
+        : [];
+
+      let parsedReviews = [];
+      if (form.reviews.trim()) {
+        parsedReviews = form.reviews.split("\n").map(line => {
+          const parts = line.split("|").map(p => p.trim());
+          return {
+            name: parts[0] || "Anonymous",
+            rating: parts[1] ? Number(parts[1]) : 4,
+            comment: parts[2] || parts[0] || "",
+            date: new Date().toISOString().split("T")[0],
+          };
+        }).filter(r => r.comment);
+      }
+
       const productData = {
         ...form,
         price: Number(form.price),
@@ -34,6 +53,8 @@ function AddProduct() {
         rating: form.rating ? Number(form.rating) : undefined,
         stock: Number(form.stock),
         gallery: form.gallery ? form.gallery.split(",").map(url => url.trim()) : [],
+        specs: parsedSpecs,
+        reviews: parsedReviews,
       };
 
       await axios.post(`${API_BASE_URL}/api/products`, productData, {
@@ -168,8 +189,26 @@ function AddProduct() {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               placeholder="Product description..."
-              rows={5}
+              rows={3}
               required
+            />
+          </label>
+
+          <label> Specifications (one per line)
+            <textarea
+              value={form.specs}
+              onChange={(e) => setForm({ ...form, specs: e.target.value })}
+              placeholder={"Display: 6.7 inch Super AMOLED\nRAM: 8GB\nStorage: 128GB\nBattery: 5000mAh"}
+              rows={5}
+            />
+          </label>
+
+          <label> Reviews (one per line: Name | Rating | Comment)
+            <textarea
+              value={form.reviews}
+              onChange={(e) => setForm({ ...form, reviews: e.target.value })}
+              placeholder={"John D | 4.5 | Amazing product, highly recommend!\nSarah M | 5 | Best purchase I've made this year"}
+              rows={4}
             />
           </label>
 

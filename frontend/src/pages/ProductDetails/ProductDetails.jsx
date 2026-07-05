@@ -81,7 +81,7 @@ function ProductDetails() {
             <em>{product.discount}</em>
           </div>
 
-          <p>Designed for people who want speed, premium materials and a sharper everyday tech experience without extra fuss.</p>
+          <p>{product.description || "Designed for people who want speed, premium materials and a sharper everyday tech experience without extra fuss."}</p>
 
           <div className="details-actions">
 
@@ -103,9 +103,20 @@ function ProductDetails() {
 
           <div className="reviews">
             <h3>Reviews</h3>
-            {(product.reviews || []).map((review) => (
-              <p key={review}>"{review}"</p>
-            ))}
+            {(product.reviews || []).map((review, index) =>
+              typeof review === "object" ? (
+                <div key={index} className="review-item">
+                  <div className="review-header">
+                    <strong>{review.name}</strong>
+                    <span>⭐ {review.rating}</span>
+                    {review.date && <span className="review-date">{review.date}</span>}
+                  </div>
+                  <p>"{review.comment}"</p>
+                </div>
+              ) : (
+                <p key={index}>"{review}"</p>
+              )
+            )}
           </div>
         </div>
       </div>

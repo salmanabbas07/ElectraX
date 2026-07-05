@@ -139,6 +139,38 @@
   margin: 9px 0 0;
 }
 
+.review-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.review-header strong {
+  color: var(--text);
+}
+
+.review-header span {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.review-date {
+  margin-left: auto;
+  font-size: 0.85rem;
+}
+
 @media (max-width: 900px) {
   .details-grid {
     grid-template-columns: 1fr;

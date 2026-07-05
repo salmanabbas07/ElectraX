@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema(
     title: String,
     brand: String,
     category: String,
+    description: String,
     price: Number,
     oldPrice: Number,
     rating: Number,
@@ -13,7 +14,7 @@ const productSchema = new mongoose.Schema(
     image: String,
     gallery: [String],
     specs: [String],
-    reviews: [String],
+    reviews: [mongoose.Schema.Types.Mixed],
   },
   {
     strict: false,
