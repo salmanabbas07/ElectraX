@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { FiBox, FiShoppingBag, FiTrendingUp, FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -12,6 +12,9 @@ function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsTopRef = useRef(null);
+  const productsPerPage = 10;
 
   useEffect(() => {
     fetchData();
@@ -43,7 +46,12 @@ function AdminDashboard() {
       await axios.delete(`${API_BASE_URL}/api/products/${id}`, {
         withCredentials: true,
       });
-      setProducts(products.filter((p) => p._id !== id && p.id !== id));
+      const updatedProducts = products.filter((p) => p._id !== id && p.id !== id);
+      setProducts(updatedProducts);
+      const newTotalPages = Math.max(1, Math.ceil(updatedProducts.length / productsPerPage));
+      if (currentPage > newTotalPages) {
+        setCurrentPage(newTotalPages);
+      }
     } catch (error) {
       console.error("Failed to delete product:", error);
       alert("Failed to delete product");
@@ -71,6 +79,22 @@ function AdminDashboard() {
   const totalRevenue = orders.reduce((sum, order) => sum + order.totalAmount, 0);
   const totalOrders = orders.length;
   const pendingOrders = orders.filter((o) => o.status === "pending").length;
+
+  const totalPages = Math.max(1, Math.ceil(products.length / productsPerPage));
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const currentProducts = products.slice(startIndex, startIndex + productsPerPage);
+  const pageNumbers = useMemo(
+    () => [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
+      .filter((page, index, pages) => page >= 1 && page <= totalPages && pages.indexOf(page) === index),
+    [currentPage, totalPages]
+  );
+
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    setTimeout(() => {
+      productsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+  };
 
   return (
     <section className="page-pad admin-dashboard">
@@ -111,8 +135,9 @@ function AdminDashboard() {
             {loading ? (
               <div className="loading">Loading...</div>
             ) : (
-              <div className="products-grid">
-                {products.map((product) => (
+              <>
+              <div className="products-grid" ref={productsTopRef} key={currentPage}>
+                {currentProducts.map((product) => (
                   <div key={product._id || product.id} className="product-card">
                     <img src={product.image} alt={product.title} />
                     <div className="product-info">
@@ -136,6 +161,19 @@ function AdminDashboard() {
                   </div>
                 ))}
               </div>
+
+              {products.length > productsPerPage && (
+                <div className="pagination">
+                  <button className="page-btn" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Previous</button>
+
+                  {pageNumbers.map((pageNumber) => (
+                    <button key={pageNumber} className={currentPage === pageNumber ? "page-btn active" : "page-btn"} onClick={() => goToPage(pageNumber)}>{pageNumber}</button>
+                  ))}
+
+                  <button className="page-btn" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Next</button>
+                </div>
+              )}
+              </>
             )}
           </div>
         )}
