@@ -13,7 +13,7 @@ function Footer() {
           <p>Premium electronics, clean design, fast delivery and future-ready devices.</p>
           <div className="socials">
             {/* <a href="https://facebook.com" aria-label="Facebook"> <FiFacebook /> </a> */}
-            <a href="#" aria-label="Instagram"> <FiGlobe /> </a>
+            <a href="https://electra-x-three.vercel.app/" aria-label="Instagram"> <FiGlobe /> </a>
             <a href="https://www.linkedin.com/in/salman-abbas-3090413a8/" aria-label="Twitter"> <FiLinkedin /></a>
             <a href="https://github.com/salmanabbas07" aria-label="Github"> <FiGithub /> </a>
           </div>
