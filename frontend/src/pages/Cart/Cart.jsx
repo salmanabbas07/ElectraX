@@ -49,8 +49,9 @@ function Cart() {
       clearCart();
       navigate("/my-account");
     } catch (error) {
-      console.error("Checkout failed:", error);
-      alert("Failed to place order. Please try again.");
+      console.error("Checkout failed:", error.response || error);
+      const errorMsg = error.response?.data?.message || error.message || "Unknown error";
+      alert(`Failed to place order. Reason: ${errorMsg}`);
     } finally {
       setLoading(false);
     }
