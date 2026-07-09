@@ -27,15 +27,6 @@ function Login() {
     }
   };
 
-  const resetPassword = () => {
-    if (!form.email.includes("@")) {
-      setMessage("Enter your email first to reset password.");
-      return;
-    }
-
-    setMessage("Password reset link sent to your email.");
-  };
-
   return (
     <section className="auth-page">
       <form className="auth-card" onSubmit={submitForm}>
@@ -57,7 +48,7 @@ function Login() {
           </div>
         </label>
 
-        <button type="button" className="reset-btn" onClick={resetPassword}>Forgot password?</button>
+        <Link to="/forgot-password" className="reset-btn">Forgot password?</Link>
 
         {message && <div className="auth-message">{message}</div>}
 

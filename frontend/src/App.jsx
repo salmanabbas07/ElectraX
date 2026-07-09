@@ -8,6 +8,8 @@ import ProductDetails from "./pages/ProductDetails/ProductDetails.jsx";
 import Cart from "./pages/Cart/Cart.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Signup from "./pages/Signup/Signup.jsx";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 import MyAccount from "./pages/MyAccount/MyAccount.jsx";
 import AdminDashboard from "./pages/AdminDashboard/AdminDashboard.jsx";
 import AddProduct from "./pages/AddProduct/AddProduct.jsx";
@@ -49,6 +51,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route
             path="/my-account"
             element={
