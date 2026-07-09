@@ -1,26 +1,9 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
 import User, { normalizeUser } from "../models/User.js";
-import { error } from "console";
 
 const router = express.Router();
-
-
-let transporter;
-const getTransporter = () => {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-  }
-  return transporter;
-};
 
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET || "electrax_secret_key", {
@@ -130,19 +113,33 @@ router.post("/forget-password", async (req, res) => {
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
-    const mailOption = {
-      to: user.email,
-      from: process.env.EMAIL_USER,
-      subject: "Password Reset Request - ElectraX",
-      html: ` 
-        <p>You requested a password reset from ElectraX.</p>
-        <p>Please click on the following link to reset your password (valid for 15 minutes):</p>
-        <a href="${resetUrl}">${resetUrl}</a>
-        <p>If you did not request this, please ignore this email.</p>
-      `
-    };
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not defined in environment variables.");
+    }
 
-    await getTransporter().sendMail(mailOption);
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "ElectraX <onboarding@resend.dev>",
+        to: [user.email],
+        subject: "Password Reset Request - ElectraX",
+        html: ` 
+          <p>You requested a password reset from ElectraX.</p>
+          <p>Please click on the following link to reset your password (valid for 15 minutes):</p>
+          <a href="${resetUrl}">${resetUrl}</a>
+          <p>If you did not request this, please ignore this email.</p>
+        `
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      const errorData = await emailResponse.json();
+      throw new Error(errorData.message || "Failed to send email via Resend API");
+    }
 
     res.json({ message: "Email sent successfully with reset link." });
   } catch (err) {
