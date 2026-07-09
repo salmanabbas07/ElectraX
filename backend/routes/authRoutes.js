@@ -8,13 +8,19 @@ import { error } from "console";
 const router = express.Router();
 
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER, // email (e.g. example@gmail.com)
-    pass: process.env.EMAIL_PASS, // Gmail App Password
-  },
-});
+let transporter;
+const getTransporter = () => {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+  }
+  return transporter;
+};
 
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET || "electrax_secret_key", {
@@ -136,7 +142,7 @@ router.post("/forget-password", async (req, res) => {
       `
     };
 
-    await transporter.sendMail(mailOption);
+    await getTransporter().sendMail(mailOption);
 
     res.json({ message: "Email sent successfully with reset link." });
   } catch (err) {
