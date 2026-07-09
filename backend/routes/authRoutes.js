@@ -140,6 +140,7 @@ router.post("/forget-password", async (req, res) => {
 
     res.json({ message: "Email sent successfully with reset link." });
   } catch (err) {
+    console.error("Forgot password error:", err);
     res.status(500).json({ message: "Something went wrong. Try again.", error: err.message });
   }
 });
@@ -168,9 +169,12 @@ router.put("/reset-password/:token", async (req, res) => {
 
     res.json({ message: "Password reset successful. You can log in now." });
   } catch (err) {
+    console.error("Reset password error:", err);
     res.status(500).json({ message: "Failed to reset password. Try again.", error: err.message });
   }
-}); router.get("/me", async (req, res) => {
+});
+
+router.get("/me", async (req, res) => {
   try {
     const token = req.cookies.token;
 
