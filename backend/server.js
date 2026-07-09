@@ -17,7 +17,7 @@ if (!process.env.MONGO_URI) {
   throw new Error("MONGO_URI is missing. Add it in backend/.env");
 }
 
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", process.env.FRONTEND_URL,].filter(Boolean);
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", process.env.FRONTEND_URL, "https://electra-x-three.vercel.app"].filter(Boolean);
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());

@@ -110,7 +110,7 @@ router.post("/forget-password", async (req, res) => {
 
     await user.save();
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const frontendUrl = process.env.FRONTEND_URL || "https://electra-x-three.vercel.app";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     if (!process.env.RESEND_API_KEY) {

@@ -18,15 +18,24 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
 function App() {
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("electrax_theme");
-    return savedTheme || "dark";
+    try {
+      const savedTheme = localStorage.getItem("electrax_theme");
+      return savedTheme || "dark";
+    } catch (e) {
+      console.warn("localStorage is not accessible:", e);
+      return "dark";
+    }
   });
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     document.body.className = theme === "light" ? "light-theme" : "";
-    localStorage.setItem("electrax_theme", theme);
+    try {
+      localStorage.setItem("electrax_theme", theme);
+    } catch (e) {
+      console.warn("localStorage is not accessible:", e);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

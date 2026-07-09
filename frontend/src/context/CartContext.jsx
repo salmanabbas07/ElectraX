@@ -5,13 +5,22 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("electrax_cart");
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem("electrax_cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (e) {
+      console.warn("localStorage is not accessible:", e);
+      return [];
+    }
   });
   const [toast, setToast] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("electrax_cart", JSON.stringify(cartItems));
+    try {
+      localStorage.setItem("electrax_cart", JSON.stringify(cartItems));
+    } catch (e) {
+      console.warn("localStorage is not accessible:", e);
+    }
   }, [cartItems]);
 
   const showToast = (message) => {
