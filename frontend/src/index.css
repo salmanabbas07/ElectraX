@@ -46,7 +46,7 @@ body {
     "Segoe UI",
     sans-serif;
   transition:
-    background 0.55s var(--smooth),
+    background-color 0.55s var(--smooth),
     color 0.4s ease;
 }
 
