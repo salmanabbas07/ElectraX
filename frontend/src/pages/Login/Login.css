@@ -121,3 +121,34 @@ body.light-theme .auth-card {
     grid-template-columns: 1fr;
   }
 }
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 40px !important;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  padding: 0 !important;
+  font-size: 1.2rem;
+  transition: color 0.25s ease;
+  z-index: 10;
+}
+
+.password-toggle-icon:hover {
+  color: var(--cyan);
+}

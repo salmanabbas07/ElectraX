@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiMail } from "react-icons/fi";
+import { FiMail, FiEye, FiEyeOff } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 import "./Signup.css";
@@ -18,6 +18,8 @@ function Signup() {
   });
 
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -27,8 +29,15 @@ function Signup() {
     setLoading(true);
     setMessage("");
 
-    if (!form.name.trim() || !form.phone.trim() || !form.email.includes("@") || form.password.length < 6 || form.password !== form.confirmPassword || !form.street.trim() || !form.state.trim() || !form.city.trim() || !form.zipcode.trim()) {
+    if (!form.name.trim() || !form.phone.trim() || !form.email.includes("@") || form.password !== form.confirmPassword || !form.street.trim() || !form.state.trim() || !form.city.trim() || !form.zipcode.trim()) {
       setMessage("Please fill all fields with valid details.");
+      setLoading(false);
+      return;
+    }
+
+
+    if (form.password.length < 8) {
+      setMessage("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
@@ -76,11 +85,21 @@ function Signup() {
 
         <div className="form-row">
           <label> Password
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="At least 6 characters" />
+            <div className="password-input-wrapper">
+              <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="At least 8 characters" />
+              <button type="button" className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </label>
 
           <label> Confirm Password
-            <input type="password" value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} placeholder="Confirm password" />
+            <div className="password-input-wrapper">
+              <input type={showConfirmPassword ? "text" : "password"} value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} placeholder="Confirm password" />
+              <button type="button" className="password-toggle-icon" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
           </label>
         </div>
 
