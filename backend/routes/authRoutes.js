@@ -113,33 +113,36 @@ router.post("/forget-password", async (req, res) => {
     const frontendUrl = process.env.FRONTEND_URL || "https://electra-x-three.vercel.app";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
-    if (!process.env.RESEND_API_KEY) {
-      throw new Error("RESEND_API_KEY is not defined in environment variables.");
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error("EMAIL_USER or EMAIL_PASS is not defined in environment variables.");
     }
 
-    const emailResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+    // Set up Nodemailer transporter using Gmail
+    const transporter = (await import("nodemailer")).createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
-      body: JSON.stringify({
-        from: "ElectraX <onboarding@resend.dev>",
-        to: [user.email],
-        subject: "Password Reset Request - ElectraX",
-        html: ` 
-          <p>You requested a password reset from ElectraX.</p>
-          <p>Please click on the following link to reset your password (valid for 15 minutes):</p>
-          <a href="${resetUrl}">${resetUrl}</a>
-          <p>If you did not request this, please ignore this email.</p>
-        `
-      }),
     });
 
-    if (!emailResponse.ok) {
-      const errorData = await emailResponse.json();
-      throw new Error(errorData.message || "Failed to send email via Resend API");
-    }
+    const mailOptions = {
+      from: `"ElectraX" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "Password Reset Request - ElectraX",
+      html: ` 
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+          <h2 style="color: #2563eb;">Password Reset Request</h2>
+          <p>You requested a password reset from ElectraX.</p>
+          <p>Please click on the following link to reset your password (valid for 15 minutes):</p>
+          <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #2563eb; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+          <p style="margin-top: 20px; font-size: 0.9em; color: #666;">If the button doesn't work, copy and paste this link in your browser: <br/>${resetUrl}</p>
+          <p>If you did not request this, please ignore this email.</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     res.json({ message: "Email sent successfully with reset link." });
   } catch (err) {
