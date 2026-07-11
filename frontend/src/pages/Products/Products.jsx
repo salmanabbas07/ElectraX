@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiClock, FiDollarSign, FiSearch, FiTag, FiTrendingUp } from "react-icons/fi";
+import {
+  FiClock,
+  FiDollarSign,
+  FiSearch,
+  FiTag,
+  FiTrendingUp,
+} from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import SidebarFilter from "../../components/SidebarFilter/SidebarFilter.jsx";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
@@ -7,7 +13,10 @@ import { fetchProducts } from "../../services/api.js";
 import { getProductId } from "../../utils/productId.js";
 import "./Products.css";
 
-function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm }) {
+function Products({
+  searchTerm: propSearchTerm,
+  setSearchTerm: propSetSearchTerm,
+}) {
   const sortOptions = [
     { name: "Popular First", icon: <FiTrendingUp /> },
     { name: "Newest First", icon: <FiClock /> },
@@ -35,45 +44,92 @@ function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm
   const activeCategory = filterUi.category;
   const normalizedSearch = searchTerm.trim().toLowerCase();
   const categoryProducts = useMemo(
-    () => (activeCategory === "All" ? products : products.filter((product) => product.category === activeCategory)),
+    () =>
+      activeCategory === "All"
+        ? products
+        : products.filter((product) => product.category === activeCategory),
     [activeCategory, products],
   );
   const brands = useMemo(
-    () => [...new Set(categoryProducts.map((product) => product.brand))].sort((a, b) => a.localeCompare(b)),
+    () =>
+      [...new Set(categoryProducts.map((product) => product.brand))].sort(
+        (a, b) => a.localeCompare(b),
+      ),
     [categoryProducts],
   );
-  const filteredProducts = useMemo(() => categoryProducts
-    .filter((product) => filterUi.brand === "All" || product.brand === filterUi.brand)
-    .filter((product) => product.price <= filterUi.price)
-    .filter((product) => product.rating >= filterUi.rating)
-    .filter((product) => {
-      if (!normalizedSearch) return true;
+  const filteredProducts = useMemo(
+    () =>
+      categoryProducts
+        .filter(
+          (product) =>
+            filterUi.brand === "All" || product.brand === filterUi.brand,
+        )
+        .filter((product) => product.price <= filterUi.price)
+        .filter((product) => product.rating >= filterUi.rating)
+        .filter((product) => {
+          if (!normalizedSearch) return true;
 
-      return [product.title, product.brand, product.category, ...(product.specs || [])]
-        .join(" ")
-        .toLowerCase()
-        .includes(normalizedSearch);
-    })
-    .sort((a, b) => {
-      if (activeSort === "Newest First") {
-        const latestA = a.createdAt ? new Date(a.createdAt).getTime() : Number(a.id) || 0;
-        const latestB = b.createdAt ? new Date(b.createdAt).getTime() : Number(b.id) || 0;
-        return latestB - latestA;
-      }
-      if (activeSort === "Discount First") return parseInt(b.discount || 0) - parseInt(a.discount || 0);
-      if (activeSort === "Cheapest") return a.price - b.price;
-      return b.rating - a.rating;
-    }), [activeSort, categoryProducts, filterUi.brand, filterUi.price, filterUi.rating, normalizedSearch]);
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / productsPerPage));
+          return [
+            product.title,
+            product.brand,
+            product.category,
+            ...(product.specs || []),
+          ]
+            .join(" ")
+            .toLowerCase()
+            .includes(normalizedSearch);
+        })
+        .sort((a, b) => {
+          if (activeSort === "Newest First") {
+            const latestA = a.createdAt
+              ? new Date(a.createdAt).getTime()
+              : Number(a.id) || 0;
+            const latestB = b.createdAt
+              ? new Date(b.createdAt).getTime()
+              : Number(b.id) || 0;
+            return latestB - latestA;
+          }
+          if (activeSort === "Discount First")
+            return parseInt(b.discount || 0) - parseInt(a.discount || 0);
+          if (activeSort === "Cheapest") return a.price - b.price;
+          return b.rating - a.rating;
+        }),
+    [
+      activeSort,
+      categoryProducts,
+      filterUi.brand,
+      filterUi.price,
+      filterUi.rating,
+      normalizedSearch,
+    ],
+  );
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / productsPerPage),
+  );
   const startIndex = (currentPage - 1) * productsPerPage;
   const showingStart = filteredProducts.length === 0 ? 0 : startIndex + 1;
-  const currentProducts = filteredProducts.slice(startIndex, startIndex + productsPerPage);
-  const pageNumbers = [1, currentPage - 1, currentPage, currentPage + 1, totalPages].filter((page, index, pages) => page >= 1 && page <= totalPages && pages.indexOf(page) === index);
+  const currentProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + productsPerPage,
+  );
+  const pageNumbers = [
+    1,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    totalPages,
+  ].filter(
+    (page, index, pages) =>
+      page >= 1 && page <= totalPages && pages.indexOf(page) === index,
+  );
 
   useEffect(() => {
     fetchProducts()
       .then(setProducts)
-      .catch(() => setError("Products load nahi ho pa rahe. Backend server check karo."));
+      .catch(() =>
+        setError("Products load nahi ho pa rahe. Backend server check karo."),
+      );
   }, []);
 
   useEffect(() => {
@@ -91,7 +147,10 @@ function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm
 
   useEffect(() => {
     setCurrentPage(1);
-    setFilterUi((currentFilters) => ({ ...currentFilters, category: selectedCategory }));
+    setFilterUi((currentFilters) => ({
+      ...currentFilters,
+      category: selectedCategory,
+    }));
   }, [selectedCategory]);
 
   useEffect(() => {
@@ -102,7 +161,10 @@ function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm
     setCurrentPage(pageNumber);
 
     setTimeout(() => {
-      productsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      productsTopRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 80);
   };
 
@@ -111,14 +173,22 @@ function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm
       <div className="container">
         <div className="products-head">
           <div>
-            <h1 className="section-title">{activeCategory === "All" ? "ElectraX Products" : activeCategory}</h1>
-            <p className="section-text">Explore the latest premium electronics in one simple collection.</p>
+            <h1 className="section-title">
+              {activeCategory === "All" ? "ElectraX Products" : activeCategory}
+            </h1>
+            <p className="section-text">
+              Explore the latest premium electronics in one simple collection.
+            </p>
           </div>
           <span>{filteredProducts.length} items</span>
         </div>
 
         <div className="products-layout">
-          <SidebarFilter filters={filterUi} setFilters={setFilterUi} brands={brands}/>
+          <SidebarFilter
+            filters={filterUi}
+            setFilters={setFilterUi}
+            brands={brands}
+          />
 
           <div className="products-area" ref={productsTopRef}>
             {error && <p className="section-text">{error}</p>}
@@ -134,43 +204,81 @@ function Products({ searchTerm: propSearchTerm, setSearchTerm: propSetSearchTerm
                 />
               </label>
 
-              <span>Showing {showingStart}-{Math.min(startIndex + productsPerPage, filteredProducts.length)} of {filteredProducts.length}</span>
+              <span>
+                Showing {showingStart}-
+                {Math.min(
+                  startIndex + productsPerPage,
+                  filteredProducts.length,
+                )}{" "}
+                of {filteredProducts.length}
+              </span>
 
               <div className="sort-options">
                 {sortOptions.map((option) => (
-                  <button key={option.name} className={activeSort === option.name ? "sort-btn active" : "sort-btn"} onClick={() => setActiveSort(option.name)}>
+                  <button
+                    key={option.name}
+                    className={
+                      activeSort === option.name
+                        ? "sort-btn active"
+                        : "sort-btn"
+                    }
+                    onClick={() => setActiveSort(option.name)}
+                  >
                     {option.icon}
                     {option.name}
                   </button>
-                )
-                )}
+                ))}
               </div>
-
             </div>
 
             <div className="products-list" key={currentPage}>
-              {!error && currentProducts.map((product) => (
-                <ProductCard key={getProductId(product)} product={product} />
-              )
-              )}
+              {!error &&
+                currentProducts.map((product) => (
+                  <ProductCard key={getProductId(product)} product={product} />
+                ))}
             </div>
 
             {!error && filteredProducts.length === 0 && (
               <div className="empty-products">
                 <h2>No products found</h2>
-                <p>Try a different search, category, brand, price, or rating filter.</p>
+                <p>
+                  Try a different search, category, brand, price, or rating
+                  filter.
+                </p>
               </div>
             )}
 
             {filteredProducts.length > 0 && (
               <div className="pagination">
-                <button className="page-btn" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Previous</button>
+                <button
+                  className="page-btn"
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                >
+                  Previous
+                </button>
 
                 {pageNumbers.map((pageNumber) => (
-                  <button key={pageNumber} className={currentPage === pageNumber ? "page-btn active" : "page-btn"} onClick={() => goToPage(pageNumber)}>{pageNumber}</button>
+                  <button
+                    key={pageNumber}
+                    className={
+                      currentPage === pageNumber
+                        ? "page-btn active"
+                        : "page-btn"
+                    }
+                    onClick={() => goToPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
                 ))}
 
-                <button className="page-btn" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Next</button>
+                <button
+                  className="page-btn"
+                  disabled={currentPage === totalPages}
+                  onClick={() => goToPage(currentPage + 1)}
+                >
+                  Next
+                </button>
               </div>
             )}
           </div>

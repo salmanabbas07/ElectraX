@@ -13,7 +13,8 @@ const generateToken = (userId) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password, phone, street, city, state, zipcode } = req.body;
+    const { name, email, password, phone, street, city, state, zipcode } =
+      req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -84,13 +85,10 @@ router.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: true,
-    sameSite: "lax"
-
+    sameSite: "lax",
   });
   res.json({ message: "Logged out successfully" });
 });
-
-
 
 // forget password request
 router.post("/forget-password", async (req, res) => {
@@ -99,18 +97,24 @@ router.post("/forget-password", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "User with this email does not exist." });
+      return res
+        .status(404)
+        .json({ message: "User with this email does not exist." });
     }
 
     const resetToken = crypto.randomBytes(20).toString("hex");
 
-    user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
     // 15 min limit
     user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
 
     await user.save();
 
-    const frontendUrl = process.env.FRONTEND_URL || "https://electra-x-three.vercel.app";
+    const frontendUrl =
+      process.env.FRONTEND_URL || "https://electra-x-three.vercel.app";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     if (!process.env.BREVO_API_KEY) {
@@ -125,7 +129,10 @@ router.post("/forget-password", async (req, res) => {
         "api-key": process.env.BREVO_API_KEY,
       },
       body: JSON.stringify({
-        sender: { name: "ElectraX", email: process.env.EMAIL_USER || "abbassalman813@gmail.com" },
+        sender: {
+          name: "ElectraX",
+          email: process.env.EMAIL_USER || "abbassalman813@gmail.com",
+        },
         to: [{ email: user.email }],
         subject: "Password Reset Request - ElectraX",
         htmlContent: ` 
@@ -143,13 +150,20 @@ router.post("/forget-password", async (req, res) => {
 
     if (!emailResponse.ok) {
       const errorData = await emailResponse.json();
-      throw new Error(errorData.message || "Failed to send email via Brevo API");
+      throw new Error(
+        errorData.message || "Failed to send email via Brevo API",
+      );
     }
 
     res.json({ message: "Email sent successfully with reset link." });
   } catch (err) {
     console.error("Forgot password error:", err);
-    res.status(500).json({ message: "Something went wrong. Try again.", error: err.message });
+    res
+      .status(500)
+      .json({
+        message: "Something went wrong. Try again.",
+        error: err.message,
+      });
   }
 });
 
@@ -158,7 +172,10 @@ router.put("/reset-password/:token", async (req, res) => {
   try {
     const { password } = req.body;
 
-    const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
 
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
@@ -178,7 +195,12 @@ router.put("/reset-password/:token", async (req, res) => {
     res.json({ message: "Password reset successful. You can log in now." });
   } catch (err) {
     console.error("Reset password error:", err);
-    res.status(500).json({ message: "Failed to reset password. Try again.", error: err.message });
+    res
+      .status(500)
+      .json({
+        message: "Failed to reset password. Try again.",
+        error: err.message,
+      });
   }
 });
 
@@ -190,7 +212,10 @@ router.get("/me", async (req, res) => {
       return res.status(401).json({ message: "Not authorized" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "electrax_secret_key");
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "electrax_secret_key",
+    );
     const user = await User.findById(decoded.userId);
 
     if (!user) {

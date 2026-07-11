@@ -14,7 +14,9 @@ function ProductDetails() {
   const { addToCart } = useCart();
 
   const handleActiveImageError = () => {
-    const nextImage = (product?.gallery || []).find((image) => image !== activeImage);
+    const nextImage = (product?.gallery || []).find(
+      (image) => image !== activeImage,
+    );
 
     if (nextImage) {
       setActiveImage(nextImage);
@@ -27,7 +29,9 @@ function ProductDetails() {
         setProduct(data);
         setActiveImage(data.image);
       })
-      .catch(() => setError("Product nahi mila. Backend server ya product id check karo."));
+      .catch(() =>
+        setError("Product nahi mila. Backend server ya product id check karo."),
+      );
   }, [id]);
 
   if (error) {
@@ -35,7 +39,9 @@ function ProductDetails() {
       <section className="page-pad">
         <div className="container">
           <h1>{error}</h1>
-          <Link className="primary-btn" to="/products">Back to products</Link>
+          <Link className="primary-btn" to="/products">
+            Back to products
+          </Link>
         </div>
       </section>
     );
@@ -56,11 +62,21 @@ function ProductDetails() {
       <div className="container details-grid">
         <div className="gallery">
           <div className="main-image">
-            <img src={activeImage} alt={product.title} loading="eager" decoding="async" onError={handleActiveImageError} />
+            <img
+              src={activeImage}
+              alt={product.title}
+              loading="eager"
+              decoding="async"
+              onError={handleActiveImageError}
+            />
           </div>
           <div className="thumbs">
             {[product.image, ...(product.gallery || [])].map((image) => (
-              <button key={image} className={activeImage === image ? "active" : ""} onClick={() => setActiveImage(image)}>
+              <button
+                key={image}
+                className={activeImage === image ? "active" : ""}
+                onClick={() => setActiveImage(image)}
+              >
                 <img src={image} alt={product.title} />
               </button>
             ))}
@@ -81,14 +97,21 @@ function ProductDetails() {
             <em>{product.discount}</em>
           </div>
 
-          <p>{product.description || "Designed for people who want speed, premium materials and a sharper everyday tech experience without extra fuss."}</p>
+          <p>
+            {product.description ||
+              "Designed for people who want speed, premium materials and a sharper everyday tech experience without extra fuss."}
+          </p>
 
           <div className="details-actions">
+            <button className="primary-btn" onClick={() => addToCart(product)}>
+              {" "}
+              <FiShoppingCart /> Add to Cart{" "}
+            </button>
 
-            <button className="primary-btn" onClick={() => addToCart(product)}> <FiShoppingCart /> Add to Cart </button>
-
-            <button className="secondary-btn"> <FiZap /> Buy Now </button>
-
+            <button className="secondary-btn">
+              {" "}
+              <FiZap /> Buy Now{" "}
+            </button>
           </div>
 
           <div className="spec-box">
@@ -96,8 +119,7 @@ function ProductDetails() {
             <ul>
               {(product.specs || []).map((spec) => (
                 <li key={spec}>{spec}</li>
-              )
-              )}
+              ))}
             </ul>
           </div>
 
@@ -109,13 +131,15 @@ function ProductDetails() {
                   <div className="review-header">
                     <strong>{review.name}</strong>
                     <span>⭐ {review.rating}</span>
-                    {review.date && <span className="review-date">{review.date}</span>}
+                    {review.date && (
+                      <span className="review-date">{review.date}</span>
+                    )}
                   </div>
                   <p>"{review.comment}"</p>
                 </div>
               ) : (
                 <p key={index}>"{review}"</p>
-              )
+              ),
             )}
           </div>
         </div>

@@ -33,12 +33,14 @@ router.put("/profile", protect, async (req, res) => {
         phone,
         address: { street, city, state, zipcode },
       },
-      { new: true }
+      { new: true },
     );
 
     res.json(normalizeUser(user));
   } catch (error) {
-    res.status(500).json({ message: "Failed to update profile", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update profile", error: error.message });
   }
 });
 

@@ -1,7 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE_URL = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) ? "http://localhost:5000" : "";
+const API_BASE_URL =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5000"
+    : "";
 
 const AuthContext = createContext();
 
@@ -30,7 +35,7 @@ export function AuthProvider({ children }) {
     const response = await axios.post(
       `${API_BASE_URL}/api/auth/login`,
       { email, password },
-      { withCredentials: true }
+      { withCredentials: true },
     );
     setUser(response.data.user);
     return response.data;
@@ -40,14 +45,18 @@ export function AuthProvider({ children }) {
     const response = await axios.post(
       `${API_BASE_URL}/api/auth/signup`,
       userData,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     setUser(response.data.user);
     return response.data;
   };
 
   const logout = async () => {
-    await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, { withCredentials: true });
+    await axios.post(
+      `${API_BASE_URL}/api/auth/logout`,
+      {},
+      { withCredentials: true },
+    );
     setUser(null);
   };
 

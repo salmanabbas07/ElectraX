@@ -7,15 +7,35 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-grid">
-
         <div>
-          <Link to="/" className="footer-logo"> ElectraX</Link>
-          <p>Premium electronics, clean design, fast delivery and future-ready devices.</p>
+          <Link to="/" className="footer-logo">
+            {" "}
+            ElectraX
+          </Link>
+          <p>
+            Premium electronics, clean design, fast delivery and future-ready
+            devices.
+          </p>
           <div className="socials">
             {/* <a href="https://facebook.com" aria-label="Facebook"> <FiFacebook /> </a> */}
-            <a href="https://electra-x-three.vercel.app/" aria-label="Instagram"> <FiGlobe /> </a>
-            <a href="https://www.linkedin.com/in/salman-abbas-3090413a8/" aria-label="Twitter"> <FiLinkedin /></a>
-            <a href="https://github.com/salmanabbas07" aria-label="Github"> <FiGithub /> </a>
+            <a
+              href="https://electra-x-three.vercel.app/"
+              aria-label="Instagram"
+            >
+              {" "}
+              <FiGlobe />{" "}
+            </a>
+            <a
+              href="https://www.linkedin.com/in/salman-abbas-3090413a8/"
+              aria-label="Twitter"
+            >
+              {" "}
+              <FiLinkedin />
+            </a>
+            <a href="https://github.com/salmanabbas07" aria-label="Github">
+              {" "}
+              <FiGithub />{" "}
+            </a>
           </div>
         </div>
 
@@ -39,11 +59,11 @@ function Footer() {
 
           <form className="newsletter">
             <input type="email" placeholder="Email address" />
-            <button aria-label="Subscribe"><FiSend /></button>
+            <button aria-label="Subscribe">
+              <FiSend />
+            </button>
           </form>
-
         </div>
-
       </div>
       <p className="copy">© 2026 ElectraX. Built for modern tech shoppers.</p>
     </footer>

@@ -38,7 +38,9 @@ router.post("/", protect, admin, async (req, res) => {
     const product = await Product.create(req.body);
     res.status(201).json(normalizeProduct(product));
   } catch (error) {
-    res.status(500).json({ message: "Failed to create product", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create product", error: error.message });
   }
 });
 
@@ -49,7 +51,9 @@ router.put("/:id", protect, admin, async (req, res) => {
       ? { _id: id }
       : { id: Number(id) };
 
-    const product = await Product.findOneAndUpdate(query, req.body, { new: true });
+    const product = await Product.findOneAndUpdate(query, req.body, {
+      new: true,
+    });
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -57,7 +61,9 @@ router.put("/:id", protect, admin, async (req, res) => {
 
     res.json(normalizeProduct(product));
   } catch (error) {
-    res.status(500).json({ message: "Failed to update product", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update product", error: error.message });
   }
 });
 
@@ -76,7 +82,9 @@ router.delete("/:id", protect, admin, async (req, res) => {
 
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete product", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete product", error: error.message });
   }
 });
 

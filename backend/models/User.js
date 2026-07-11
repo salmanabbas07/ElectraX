@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: {
       type: String,
     },
-    
+
     resetPasswordExpires: {
       type: Date,
     },
@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 userSchema.pre("save", async function (next) {
@@ -60,7 +60,6 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
-
   return await bcrypt.compare(candidatePassword, this.password);
 };
 

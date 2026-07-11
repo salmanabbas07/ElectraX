@@ -33,7 +33,7 @@ function App() {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: "smooth",
     });
   }, [pathname]);
 
@@ -59,11 +59,21 @@ function App() {
 
   return (
     <>
-      <Navbar theme={theme} toggleTheme={toggleTheme} searchTerm={searchTerm} onSearch={handleSearch} />
+      <Navbar
+        theme={theme}
+        toggleTheme={toggleTheme}
+        searchTerm={searchTerm}
+        onSearch={handleSearch}
+      />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products searchTerm={searchTerm} setSearchTerm={setSearchTerm} />} />
+          <Route
+            path="/products"
+            element={
+              <Products searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            }
+          />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />

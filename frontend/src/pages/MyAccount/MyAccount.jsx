@@ -1,11 +1,22 @@
 import { useState, useEffect } from "react";
-import { FiUser, FiMapPin, FiShoppingBag, FiLogOut, FiEdit2 } from "react-icons/fi";
+import {
+  FiUser,
+  FiMapPin,
+  FiShoppingBag,
+  FiLogOut,
+  FiEdit2,
+} from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { formatPrice } from "../../utils/formatPrice.js";
 import axios from "axios";
 import "./MyAccount.css";
 
-const API_BASE_URL = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) ? "http://localhost:5000" : "";
+const API_BASE_URL =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5000"
+    : "";
 
 function MyAccount() {
   const { user, logout } = useAuth();
@@ -51,11 +62,9 @@ function MyAccount() {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `${API_BASE_URL}/api/users/profile`,
-        formData,
-        { withCredentials: true }
-      );
+      await axios.put(`${API_BASE_URL}/api/users/profile`, formData, {
+        withCredentials: true,
+      });
       setEditing(false);
       window.location.reload();
     } catch (error) {
@@ -76,12 +85,16 @@ function MyAccount() {
     <section className="page-pad my-account">
       <div className="container">
         <h1 className="section-title">My Account</h1>
-        <p className="section-text">Manage your profile and view your orders.</p>
+        <p className="section-text">
+          Manage your profile and view your orders.
+        </p>
 
         <div className="account-grid">
           <div className="profile-section">
             <div className="section-header">
-              <h2><FiUser /> Profile Information</h2>
+              <h2>
+                <FiUser /> Profile Information
+              </h2>
               {!editing && (
                 <button className="icon-btn" onClick={() => setEditing(true)}>
                   <FiEdit2 />
@@ -91,67 +104,101 @@ function MyAccount() {
 
             {editing ? (
               <form className="profile-form" onSubmit={handleUpdateProfile}>
-                <label> Full Name
+                <label>
+                  {" "}
+                  Full Name
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                   />
                 </label>
 
-                <label> Email
+                <label>
+                  {" "}
+                  Email
                   <input type="email" value={user.email} disabled />
                 </label>
 
-                <label> Phone
+                <label>
+                  {" "}
+                  Phone
                   <input
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                   />
                 </label>
 
-                <div className="address-title"><FiMapPin /> Address</div>
+                <div className="address-title">
+                  <FiMapPin /> Address
+                </div>
 
-                <label> Street
+                <label>
+                  {" "}
+                  Street
                   <input
                     type="text"
                     value={formData.street}
-                    onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, street: e.target.value })
+                    }
                   />
                 </label>
 
                 <div className="form-row">
-                  <label> City
+                  <label>
+                    {" "}
+                    City
                     <input
                       type="text"
                       value={formData.city}
-                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, city: e.target.value })
+                      }
                     />
                   </label>
 
-                  <label> State
+                  <label>
+                    {" "}
+                    State
                     <input
                       type="text"
                       value={formData.state}
-                      onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, state: e.target.value })
+                      }
                     />
                   </label>
                 </div>
 
-                <label> Zipcode
+                <label>
+                  {" "}
+                  Zipcode
                   <input
                     type="text"
                     value={formData.zipcode}
-                    onChange={(e) => setFormData({ ...formData, zipcode: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, zipcode: e.target.value })
+                    }
                   />
                 </label>
 
                 <div className="form-actions">
-                  <button type="button" className="secondary-btn" onClick={() => setEditing(false)}>
+                  <button
+                    type="button"
+                    className="secondary-btn"
+                    onClick={() => setEditing(false)}
+                  >
                     Cancel
                   </button>
-                  <button type="submit" className="primary-btn">Save Changes</button>
+                  <button type="submit" className="primary-btn">
+                    Save Changes
+                  </button>
                 </div>
               </form>
             ) : (
@@ -170,13 +217,21 @@ function MyAccount() {
                 </div>
                 <div className="info-row">
                   <span>Member Since:</span>
-                  <strong>{new Date(user.createdAt).toLocaleDateString()}</strong>
+                  <strong>
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </strong>
                 </div>
 
-                <div className="address-title"><FiMapPin /> Shipping Address</div>
+                <div className="address-title">
+                  <FiMapPin /> Shipping Address
+                </div>
                 <div className="address-info">
                   <p>{user.address?.street || "Not provided"}</p>
-                  <p>{user.address?.city && user.address?.state ? `${user.address.city}, ${user.address.state}` : "Not provided"}</p>
+                  <p>
+                    {user.address?.city && user.address?.state
+                      ? `${user.address.city}, ${user.address.state}`
+                      : "Not provided"}
+                  </p>
                   <p>{user.address?.zipcode || "Not provided"}</p>
                 </div>
 
@@ -189,7 +244,9 @@ function MyAccount() {
 
           <div className="orders-section">
             <div className="section-header">
-              <h2><FiShoppingBag /> Order History</h2>
+              <h2>
+                <FiShoppingBag /> Order History
+              </h2>
             </div>
 
             {loading ? (
@@ -226,8 +283,12 @@ function MyAccount() {
                     </div>
 
                     <div className="order-footer">
-                      <p><strong>Total:</strong> {formatPrice(order.totalAmount)}</p>
-                      <p><strong>Payment:</strong> {order.paymentStatus}</p>
+                      <p>
+                        <strong>Total:</strong> {formatPrice(order.totalAmount)}
+                      </p>
+                      <p>
+                        <strong>Payment:</strong> {order.paymentStatus}
+                      </p>
                     </div>
                   </div>
                 ))}

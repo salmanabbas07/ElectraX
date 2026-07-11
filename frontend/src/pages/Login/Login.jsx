@@ -21,7 +21,9 @@ function Login() {
       await login(form.email, form.password);
       navigate("/");
     } catch (error) {
-      setMessage(error.response?.data?.message || "Login failed. Please try again.");
+      setMessage(
+        error.response?.data?.message || "Login failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -35,20 +37,40 @@ function Login() {
         <h1>Welcome back</h1>
         <p>Sign in to continue your premium tech shopping.</p>
 
-        <label> Email
-          <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" />
+        <label>
+          {" "}
+          Email
+          <input
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            placeholder="you@example.com"
+          />
         </label>
 
-        <label> Password
+        <label>
+          {" "}
+          Password
           <div className="password-input-wrapper">
-            <input type={showPassword ? "text" : "password"} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Enter password" />
-            <button type="button" className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+            <input
+              type={showPassword ? "text" : "password"}
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              placeholder="Enter password"
+            />
+            <button
+              type="button"
+              className="password-toggle-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </button>
           </div>
         </label>
 
-        <Link to="/forgot-password" className="reset-btn">Forgot password?</Link>
+        <Link to="/forgot-password" className="reset-btn">
+          Forgot password?
+        </Link>
 
         {message && <div className="auth-message">{message}</div>}
 
@@ -57,10 +79,15 @@ function Login() {
         </button>
 
         <div className="social-login">
-          <button type="button"> <FiMail /> Google </button>
+          <button type="button">
+            {" "}
+            <FiMail /> Google{" "}
+          </button>
         </div>
 
-        <small>New here? <Link to="/signup">Create an account</Link></small>
+        <small>
+          New here? <Link to="/signup">Create an account</Link>
+        </small>
       </form>
     </section>
   );

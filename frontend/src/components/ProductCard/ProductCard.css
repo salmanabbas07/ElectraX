@@ -29,8 +29,11 @@
   height: 240px;
   overflow: hidden;
   /* border: 2px solid red !important; */
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.9));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96),
+    rgba(241, 245, 249, 0.9)
+  );
 }
 
 .product-img img {
@@ -38,9 +41,10 @@
   height: 100% !important;
   object-fit: contain;
   padding: 18px;
-  transition: transform 0.55s var(--smooth), filter 0.35s ease;
+  transition:
+    transform 0.55s var(--smooth),
+    filter 0.35s ease;
   /* border: 2px solid red !important; */
-
 }
 
 .product-card:hover .product-img img {
@@ -72,7 +76,9 @@
   border-radius: 999px;
   color: #fff;
   background: rgba(15, 23, 42, 0.72);
-  transition: transform 0.3s var(--smooth), background 0.3s ease;
+  transition:
+    transform 0.3s var(--smooth),
+    background 0.3s ease;
 }
 
 .wish-btn:hover {
@@ -141,7 +147,9 @@
   color: #fff;
   background: linear-gradient(135deg, var(--primary), var(--cyan));
   font-weight: 800;
-  transition: transform 0.3s var(--smooth), box-shadow 0.3s ease;
+  transition:
+    transform 0.3s var(--smooth),
+    box-shadow 0.3s ease;
 }
 
 .add-btn:hover {

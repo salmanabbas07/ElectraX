@@ -23,15 +23,15 @@ function buildBrandImagePools(products) {
 
   for (const product of products) {
     const urls = [product.image, ...(product.gallery || [])].filter(Boolean);
-    urls.forEach(url => {
-      const baseUrl = url.split('?')[0];
+    urls.forEach((url) => {
+      const baseUrl = url.split("?")[0];
       allImages.add(baseUrl);
-      
+
       if (!brandPools.has(product.brand)) {
         brandPools.set(product.brand, new Set());
       }
       brandPools.get(product.brand).add(baseUrl);
-      
+
       if (!categoryPools.has(product.category)) {
         categoryPools.set(product.category, new Set());
       }
@@ -47,29 +47,35 @@ function buildBrandImagePools(products) {
     return result;
   };
 
-  return { 
-    brandPools: toArray(brandPools), 
+  return {
+    brandPools: toArray(brandPools),
     categoryPools: toArray(categoryPools),
-    allImages: Array.from(allImages) 
+    allImages: Array.from(allImages),
   };
 }
 
-function pickImageForProduct(brandPools, categoryPools, allImages, product, slot) {
+function pickImageForProduct(
+  brandPools,
+  categoryPools,
+  allImages,
+  product,
+  slot,
+) {
   const brandPool = brandPools.get(product.brand);
   const categoryPool = categoryPools.get(product.category);
-  
+
   const hash = (product.id * 31 + slot * 17) % 2147483647;
-  
+
   if (brandPool && brandPool.length > 0) {
     const index = Math.abs(hash) % brandPool.length;
     return brandPool[index];
   }
-  
+
   if (categoryPool && categoryPool.length > 0) {
     const index = Math.abs(hash) % categoryPool.length;
     return categoryPool[index];
   }
-  
+
   const index = Math.abs(hash) % allImages.length;
   return allImages[index];
 }
@@ -80,18 +86,37 @@ async function updateProductImages() {
   const products = await Product.find().sort({ id: 1 });
 
   if (products.length !== EXPECTED_PRODUCT_COUNT) {
-    throw new Error(`Expected ${EXPECTED_PRODUCT_COUNT} products, found ${products.length}. Aborting image update.`);
+    throw new Error(
+      `Expected ${EXPECTED_PRODUCT_COUNT} products, found ${products.length}. Aborting image update.`,
+    );
   }
 
-  const { brandPools, categoryPools, allImages } = buildBrandImagePools(products);
+  const { brandPools, categoryPools, allImages } =
+    buildBrandImagePools(products);
   const operations = [];
 
   for (const product of products) {
-    const image = pickImageForProduct(brandPools, categoryPools, allImages, product, 0);
+    const image = pickImageForProduct(
+      brandPools,
+      categoryPools,
+      allImages,
+      product,
+      0,
+    );
     const signedImage = addImageSignature(image, product.id, "main");
-    
-    const gallery = [1, 2, 3].map((slot) => 
-      addImageSignature(pickImageForProduct(brandPools, categoryPools, allImages, product, slot), product.id, slot)
+
+    const gallery = [1, 2, 3].map((slot) =>
+      addImageSignature(
+        pickImageForProduct(
+          brandPools,
+          categoryPools,
+          allImages,
+          product,
+          slot,
+        ),
+        product.id,
+        slot,
+      ),
     );
 
     operations.push({

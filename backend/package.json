@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
+    "build":"npm install --prefix frontend && npm run build --prefix frontend && npm install --prefix backend",
     "start": "node server.js",
     "seed": "node scripts/seedProducts.js",
     "seed-admin": "node scripts/seedAdmin.js",
@@ -19,5 +20,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.4.1",
     "nodemailer": "^9.0.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.5"
   }
 }

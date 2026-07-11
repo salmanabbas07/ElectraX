@@ -1,11 +1,23 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { FiBox, FiShoppingBag, FiTrendingUp, FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
+import {
+  FiBox,
+  FiShoppingBag,
+  FiTrendingUp,
+  FiPlus,
+  FiEdit2,
+  FiTrash2,
+} from "react-icons/fi";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { formatPrice } from "../../utils/formatPrice.js";
 import "./AdminDashboard.css";
 
-const API_BASE_URL = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) ? "http://localhost:5000" : "";
+const API_BASE_URL =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5000"
+    : "";
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("products");
@@ -40,15 +52,21 @@ function AdminDashboard() {
   };
 
   const deleteProduct = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
 
     try {
       await axios.delete(`${API_BASE_URL}/api/products/${id}`, {
         withCredentials: true,
       });
-      const updatedProducts = products.filter((p) => p._id !== id && p.id !== id);
+      const updatedProducts = products.filter(
+        (p) => p._id !== id && p.id !== id,
+      );
       setProducts(updatedProducts);
-      const newTotalPages = Math.max(1, Math.ceil(updatedProducts.length / productsPerPage));
+      const newTotalPages = Math.max(
+        1,
+        Math.ceil(updatedProducts.length / productsPerPage),
+      );
       if (currentPage > newTotalPages) {
         setCurrentPage(newTotalPages);
       }
@@ -63,12 +81,12 @@ function AdminDashboard() {
       await axios.put(
         `${API_BASE_URL}/api/orders/${orderId}/status`,
         { status },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setOrders(
         orders.map((order) =>
-          order._id === orderId ? { ...order, status } : order
-        )
+          order._id === orderId ? { ...order, status } : order,
+        ),
       );
     } catch (error) {
       console.error("Failed to update order status:", error);
@@ -76,23 +94,35 @@ function AdminDashboard() {
     }
   };
 
-  const totalRevenue = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+  const totalRevenue = orders.reduce(
+    (sum, order) => sum + order.totalAmount,
+    0,
+  );
   const totalOrders = orders.length;
   const pendingOrders = orders.filter((o) => o.status === "pending").length;
 
   const totalPages = Math.max(1, Math.ceil(products.length / productsPerPage));
   const startIndex = (currentPage - 1) * productsPerPage;
-  const currentProducts = products.slice(startIndex, startIndex + productsPerPage);
+  const currentProducts = products.slice(
+    startIndex,
+    startIndex + productsPerPage,
+  );
   const pageNumbers = useMemo(
-    () => [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
-      .filter((page, index, pages) => page >= 1 && page <= totalPages && pages.indexOf(page) === index),
-    [currentPage, totalPages]
+    () =>
+      [1, currentPage - 1, currentPage, currentPage + 1, totalPages].filter(
+        (page, index, pages) =>
+          page >= 1 && page <= totalPages && pages.indexOf(page) === index,
+      ),
+    [currentPage, totalPages],
   );
 
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber);
     setTimeout(() => {
-      productsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      productsTopRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 80);
   };
 
@@ -136,43 +166,74 @@ function AdminDashboard() {
               <div className="loading">Loading...</div>
             ) : (
               <>
-              <div className="products-grid" ref={productsTopRef} key={currentPage}>
-                {currentProducts.map((product) => (
-                  <div key={product._id || product.id} className="product-card">
-                    <img src={product.image} alt={product.title} />
-                    <div className="product-info">
-                      <h3>{product.title}</h3>
-                      <p>{formatPrice(product.price)}</p>
-                      <div className="product-actions">
-                        <Link
-                          to={`/admin/edit-product/${product._id || product.id}`}
-                          className="icon-btn"
-                        >
-                          <FiEdit2 />
-                        </Link>
-                        <button
-                          className="icon-btn delete"
-                          onClick={() => deleteProduct(product._id || product.id)}
-                        >
-                          <FiTrash2 />
-                        </button>
+                <div
+                  className="products-grid"
+                  ref={productsTopRef}
+                  key={currentPage}
+                >
+                  {currentProducts.map((product) => (
+                    <div
+                      key={product._id || product.id}
+                      className="product-card"
+                    >
+                      <img src={product.image} alt={product.title} />
+                      <div className="product-info">
+                        <h3>{product.title}</h3>
+                        <p>{formatPrice(product.price)}</p>
+                        <div className="product-actions">
+                          <Link
+                            to={`/admin/edit-product/${product._id || product.id}`}
+                            className="icon-btn"
+                          >
+                            <FiEdit2 />
+                          </Link>
+                          <button
+                            className="icon-btn delete"
+                            onClick={() =>
+                              deleteProduct(product._id || product.id)
+                            }
+                          >
+                            <FiTrash2 />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-
-              {products.length > productsPerPage && (
-                <div className="pagination">
-                  <button className="page-btn" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Previous</button>
-
-                  {pageNumbers.map((pageNumber) => (
-                    <button key={pageNumber} className={currentPage === pageNumber ? "page-btn active" : "page-btn"} onClick={() => goToPage(pageNumber)}>{pageNumber}</button>
                   ))}
-
-                  <button className="page-btn" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Next</button>
                 </div>
-              )}
+
+                {products.length > productsPerPage && (
+                  <div className="pagination">
+                    <button
+                      className="page-btn"
+                      disabled={currentPage === 1}
+                      onClick={() => goToPage(currentPage - 1)}
+                    >
+                      Previous
+                    </button>
+
+                    {pageNumbers.map((pageNumber) => (
+                      <button
+                        key={pageNumber}
+                        className={
+                          currentPage === pageNumber
+                            ? "page-btn active"
+                            : "page-btn"
+                        }
+                        onClick={() => goToPage(pageNumber)}
+                      >
+                        {pageNumber}
+                      </button>
+                    ))}
+
+                    <button
+                      className="page-btn"
+                      disabled={currentPage === totalPages}
+                      onClick={() => goToPage(currentPage + 1)}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -197,7 +258,9 @@ function AdminDashboard() {
                       </div>
                       <select
                         value={order.status}
-                        onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                        onChange={(e) =>
+                          updateOrderStatus(order._id, e.target.value)
+                        }
                         className="status-select"
                       >
                         <option value="pending">Pending</option>
@@ -220,8 +283,12 @@ function AdminDashboard() {
                       ))}
                     </div>
                     <div className="order-footer">
-                      <p><strong>Total:</strong> {formatPrice(order.totalAmount)}</p>
-                      <p><strong>Payment:</strong> {order.paymentStatus}</p>
+                      <p>
+                        <strong>Total:</strong> {formatPrice(order.totalAmount)}
+                      </p>
+                      <p>
+                        <strong>Payment:</strong> {order.paymentStatus}
+                      </p>
                     </div>
                   </div>
                 ))}

@@ -5,7 +5,14 @@ function ProtectedRoute({ children, requireAdmin = false }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div className="container" style={{ padding: "120px 0", textAlign: "center" }}>Loading...</div>;
+    return (
+      <div
+        className="container"
+        style={{ padding: "120px 0", textAlign: "center" }}
+      >
+        Loading...
+      </div>
+    );
   }
 
   if (!user) {

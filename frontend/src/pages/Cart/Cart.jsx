@@ -8,10 +8,16 @@ import { getProductId } from "../../utils/productId.js";
 import axios from "axios";
 import "./Cart.css";
 
-const API_BASE_URL = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) ? "http://localhost:5000" : "";
+const API_BASE_URL =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5000"
+    : "";
 
 function Cart() {
-  const { cartItems, cartTotal, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { cartItems, cartTotal, updateQuantity, removeFromCart, clearCart } =
+    useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -47,7 +53,8 @@ function Cart() {
       navigate("/my-account");
     } catch (error) {
       console.error("Checkout failed:", error.response || error);
-      const errorMsg = error.response?.data?.message || error.message || "Unknown error";
+      const errorMsg =
+        error.response?.data?.message || error.message || "Unknown error";
       alert(`Failed to place order. Reason: ${errorMsg}`);
     } finally {
       setLoading(false);
@@ -61,18 +68,16 @@ function Cart() {
         <p className="section-text">Review your devices before checkout.</p>
 
         {cartItems.length === 0 ? (
-
           <div className="empty-cart">
             <h2>Your cart is waiting for its first upgrade.</h2>
-            <Link className="primary-btn" to="/products">Shop Products</Link>
+            <Link className="primary-btn" to="/products">
+              Shop Products
+            </Link>
           </div>
-
         ) : (
-
           <div className="cart-layout">
             <div className="cart-items">
               {cartItems.map((item) => (
-
                 <article className="cart-item" key={getProductId(item)}>
                   <img src={item.image} alt={item.title} />
 
@@ -81,30 +86,58 @@ function Cart() {
                     <p>{formatPrice(item.price)}</p>
 
                     <div className="qty-row">
-                      <button onClick={() => updateQuantity(getProductId(item), "decrease")}> <FiMinus /> </button>
+                      <button
+                        onClick={() =>
+                          updateQuantity(getProductId(item), "decrease")
+                        }
+                      >
+                        {" "}
+                        <FiMinus />{" "}
+                      </button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(getProductId(item), "increase")}> <FiPlus /> </button>
+                      <button
+                        onClick={() =>
+                          updateQuantity(getProductId(item), "increase")
+                        }
+                      >
+                        {" "}
+                        <FiPlus />{" "}
+                      </button>
                     </div>
-
                   </div>
 
-                  <button className="remove-btn" onClick={() => removeFromCart(getProductId(item))}><FiTrash2 /></button>
+                  <button
+                    className="remove-btn"
+                    onClick={() => removeFromCart(getProductId(item))}
+                  >
+                    <FiTrash2 />
+                  </button>
                 </article>
-
-              )
-              )}
+              ))}
             </div>
 
             <aside className="summary">
               <h2>Order Summary</h2>
-              <p><span>Subtotal</span><strong>{formatPrice(cartTotal)}</strong></p>
-              <p><span>Shipping</span><strong>{formatPrice(shipping)}</strong></p>
-              <p className="total"><span>Total</span><strong>{formatPrice(finalTotal)}</strong></p>
-              <button className="primary-btn" onClick={handleCheckout} disabled={loading}>
+              <p>
+                <span>Subtotal</span>
+                <strong>{formatPrice(cartTotal)}</strong>
+              </p>
+              <p>
+                <span>Shipping</span>
+                <strong>{formatPrice(shipping)}</strong>
+              </p>
+              <p className="total">
+                <span>Total</span>
+                <strong>{formatPrice(finalTotal)}</strong>
+              </p>
+              <button
+                className="primary-btn"
+                onClick={handleCheckout}
+                disabled={loading}
+              >
                 {loading ? "Processing..." : "Checkout"}
               </button>
             </aside>
-
           </div>
         )}
       </div>

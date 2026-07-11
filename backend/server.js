@@ -7,6 +7,7 @@ import productRoutes from "./routes/productRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import path from "path"
 
 dotenv.config();
 
@@ -17,7 +18,12 @@ if (!process.env.MONGO_URI) {
   throw new Error("MONGO_URI is missing. Add it in backend/.env");
 }
 
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173", process.env.FRONTEND_URL, "https://electra-x-three.vercel.app"].filter(Boolean);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  process.env.FRONTEND_URL,
+  "https://electra-x-three.vercel.app",
+].filter(Boolean);
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
@@ -32,6 +38,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(_dirname, "../frontend/dist")));
+
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(_dirname, "../frontend/dist/index.html"));
+  });
+}
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {

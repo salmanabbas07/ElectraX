@@ -4,7 +4,12 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import axios from "axios";
 import "../Login/Login.css";
 
-const API_BASE_URL = (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) ? "http://localhost:5000" : "";
+const API_BASE_URL =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5000"
+    : "";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -18,7 +23,7 @@ function ResetPassword() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (form.password.length < 8) {
       setMessage("Password must be at least 8 characters long.");
       return;
@@ -33,16 +38,25 @@ function ResetPassword() {
     setMessage("");
 
     try {
-      const response = await axios.put(`${API_BASE_URL}/api/auth/reset-password/${token}`, {
-        password: form.password,
-      });
-      setMessage(response.data.message || "Password reset successful! Redirecting to login...");
+      const response = await axios.put(
+        `${API_BASE_URL}/api/auth/reset-password/${token}`,
+        {
+          password: form.password,
+        },
+      );
+      setMessage(
+        response.data.message ||
+          "Password reset successful! Redirecting to login...",
+      );
       setIsSuccess(true);
       setTimeout(() => {
         navigate("/login");
       }, 3000);
     } catch (error) {
-      setMessage(error.response?.data?.message || "Failed to reset password. Link may be invalid or expired.");
+      setMessage(
+        error.response?.data?.message ||
+          "Failed to reset password. Link may be invalid or expired.",
+      );
       setIsSuccess(false);
     } finally {
       setLoading(false);
@@ -59,18 +73,22 @@ function ResetPassword() {
 
         {!isSuccess && (
           <>
-            <label> New Password
+            <label>
+              {" "}
+              New Password
               <div className="password-input-wrapper">
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  value={form.password} 
-                  onChange={(e) => setForm({ ...form, password: e.target.value })} 
-                  placeholder="At least 8 characters" 
-                  required 
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={form.password}
+                  onChange={(e) =>
+                    setForm({ ...form, password: e.target.value })
+                  }
+                  placeholder="At least 8 characters"
+                  required
                 />
-                <button 
-                  type="button" 
-                  className="password-toggle-icon" 
+                <button
+                  type="button"
+                  className="password-toggle-icon"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -78,18 +96,22 @@ function ResetPassword() {
               </div>
             </label>
 
-            <label> Confirm New Password
+            <label>
+              {" "}
+              Confirm New Password
               <div className="password-input-wrapper">
-                <input 
-                  type={showConfirmPassword ? "text" : "password"} 
-                  value={form.confirmPassword} 
-                  onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} 
-                  placeholder="Confirm new password" 
-                  required 
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={form.confirmPassword}
+                  onChange={(e) =>
+                    setForm({ ...form, confirmPassword: e.target.value })
+                  }
+                  placeholder="Confirm new password"
+                  required
                 />
-                <button 
-                  type="button" 
-                  className="password-toggle-icon" 
+                <button
+                  type="button"
+                  className="password-toggle-icon"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
@@ -99,11 +121,7 @@ function ResetPassword() {
           </>
         )}
 
-        {message && (
-          <div className="auth-message">
-            {message}
-          </div>
-        )}
+        {message && <div className="auth-message">{message}</div>}
 
         {!isSuccess && (
           <button className="primary-btn" disabled={loading}>

@@ -18,13 +18,17 @@ router.post("/", protect, async (req, res) => {
 
     res.status(201).json(normalizeOrder(order));
   } catch (error) {
-    res.status(500).json({ message: "Failed to create order", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create order", error: error.message });
   }
 });
 
 router.get("/", protect, admin, async (req, res) => {
   try {
-    const orders = await Order.find().populate("user", "name email").sort({ createdAt: -1 });
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
     res.json(orders.map(normalizeOrder));
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch orders" });
@@ -33,7 +37,9 @@ router.get("/", protect, admin, async (req, res) => {
 
 router.get("/my", protect, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const orders = await Order.find({ user: req.user._id }).sort({
+      createdAt: -1,
+    });
     res.json(orders.map(normalizeOrder));
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch orders" });
@@ -65,7 +71,7 @@ router.put("/:id/status", protect, admin, async (req, res) => {
     const order = await Order.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }
+      { new: true },
     );
 
     if (!order) {
@@ -74,7 +80,9 @@ router.put("/:id/status", protect, admin, async (req, res) => {
 
     res.json(normalizeOrder(order));
   } catch (error) {
-    res.status(500).json({ message: "Failed to update order status", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update order status", error: error.message });
   }
 });
 
