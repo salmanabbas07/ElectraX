@@ -7,7 +7,6 @@ import productRoutes from "./routes/productRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import path from "path"
 
 dotenv.config();
 
@@ -38,13 +37,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(_dirname, "../frontend/dist")));
-
-  app.get("/{*any}", (req, res) => {
-    res.sendFile(path.join(_dirname, "../frontend/dist/index.html"));
-  });
-}
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
